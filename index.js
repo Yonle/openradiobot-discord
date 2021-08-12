@@ -1,9 +1,7 @@
 // Link ffmpeg-static if there's. This is used for eris.
 try {
-	require("fs").symlinkSync("ffmpeg", require("ffmpeg-static"), "file");
-} catch (error) {
-	if (error.code !== "MODULE_NOT_FOUND") return console.error(error);
-}
+	require("fs").symlinkSync(require("ffmpeg-static"), "ffmpeg", "file");
+} catch (error) {}
 
 const openradio = require("openradio");
 const eris = require("eris");
