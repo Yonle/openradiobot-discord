@@ -184,7 +184,7 @@ bot.on("messageCreate", async message => {
 			if (!radio.queue.length) return message.reply("🏜️Nothing is in queue....");
 			let method = message.content.split(" ").slice(1)[0];
 			if (!method) return (() => {
-				let text = "*Radio Queue*";
+				let text = "**Radio Queue**";
 				radio.queue.slice(0, 20).forEach((song, songNum) => {
 					songNum++;
 					if (song.isAttachment) {
@@ -307,7 +307,7 @@ bot.on("messageCreate", async message => {
 						radio.play();
 					} else {
 						radio.queue.push(res.items[0]);
-						message.reply(`✔️[${res.items[0].title}](https://youtu.be/${res.items[0].id}) has been added to queue.`);
+						message.reply(`✔️**__${res.items[0].title}__** has been added to queue.`);
 					}
 				}).catch(err => {
 					message.reply(`An error occured: ${err.toString()}`);
