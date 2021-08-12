@@ -291,7 +291,7 @@ bot.on("messageCreate", async message => {
 						radio.play();
 					} else {
 						radio.queue.push(info);
-						message.reply(`✔️[${info.videoDetails.title}](${info.videoDetails.video_url}) has been added to queue.`);
+						message.reply(`✔️**__${info.videoDetails.title}__** has been added to queue.`);
 					}
 				});
 			} else {
