@@ -1,6 +1,8 @@
 // Link ffmpeg-static if there's. This is used for eris.
 try {
-	require("fs").symlinkSync(require("ffmpeg-static"), "ffmpeg", "file");
+	let ffmpegPath = require("ffmpeg-static").split("/");
+	ffmpegPath = ffmpegPath.slice(0, ffmpegPath.length-1).join("/");
+	process.env["PATH"] = ffmpegPath + ":" + process.env["PATH"];
 } catch (error) {}
 
 const openradio = require("openradio");
