@@ -1,3 +1,10 @@
+// Link ffmpeg-static if there's. This is used for eris.
+try {
+	require("fs").symlinkSync("ffmpeg", require("ffmpeg-static"), "file");
+} catch (error) {
+	if (error.code !== "MODULE_NOT_FOUND") return console.error(error);
+}
+
 const openradio = require("openradio");
 const eris = require("eris");
 const { Server } = require("http");
@@ -114,7 +121,7 @@ bot.on("messageCreate", async message => {
 								return message.reply(`▶️Playing Voice/Audio Message....`);
 							}
 							radio.metadata.curSong = nextSong;
-							message.reply(`▶️Now Playing: [Raw Stream](${nextSong.url})`);
+							message.reply(`▶️Now Playing: **__Raw Stream__**`);
 						});
 
 						stream.on('request', () => {
@@ -134,7 +141,7 @@ bot.on("messageCreate", async message => {
 							if (radio.metadata.autoplay) {
 								radio.queue.push(info.related_videos[0]);
 							}
-							message.reply(`▶️Now playing: [${radio.metadata.curSong.videoDetails.title}](${radio.metadata.curSong.video_url})`);
+							message.reply(`▶️Now playing: **__${radio.metadata.curSong.videoDetails.title}__**`);
 						});
 
 						stream.on('error', err => message.reply(err.toString()));
@@ -165,7 +172,7 @@ bot.on("messageCreate", async message => {
 				text += `\nLoop Type: \`${radio.metadata.loopType}\``;
 				text += `\nCreated Since: \`${ms(Date.now() - radio.metadata.starttime)}\``;
 				if (radio.metadata.curSong && !radio.metadata.curSong.isAttachment) text += 
-				`\nNow Playing: [${radio.metadata.curSong.title||radio.metadata.curSong.videoDetails.title}](${radio.metadata.curSong.url || radio.metadata.curSong.videoDetails.video_url})`;
+				`\nNow Playing: ${radio.metadata.curSong.url || radio.metadata.curSong.videoDetails.video_url}`;
 				if (radio.metadata.curSong && radio.metadata.curSong.isAttachment) text += "\nNow Playing: Voice/Audio Message";
 				text += `\nAutoplay Enabled?: \`${radio.metadata.autoplay ? "Yes" : "No"}\``;
 				text += `\nTotal Queue: \`${radio.queue.length}\``;
@@ -185,9 +192,9 @@ bot.on("messageCreate", async message => {
 					if (song.isAttachment) {
 						text += `\n${songNum}. Voice/Audio Message`;
 					} else if (song.type === 'raw'){
-						text += `\n${songNum}. [Raw Stream](${song.url})`;
+						text += `\n${songNum}. **__${song.url}__**`;
 					} else {
-						text += `\n${songNum}. [${song.title}](https://youtu.be/${song.id})`;
+						text += `\n${songNum}. **__${song.title}__**\nhttps://youtu.be/${song.id}`;
 					}
 				});
 				text += "\n\n⚠️Some song is hidden due to a lot of request value. We'll improve this soon.\n\nYou may also manage these queue. For more information, Do `/queue help`";
