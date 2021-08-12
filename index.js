@@ -236,6 +236,7 @@ bot.on("messageCreate", async message => {
 
 			if (message.member.voiceState.channelID) {
 				bot.joinVoiceChannel(message.member.voiceState.channelID).catch(console.error).then(c => {
+					if (c.playing) return;
 					let ply = new PassThrough();
 					radio.metadata.listener.set(message.guildID, ply);
 					c.play(ply, { voiceDataTimeout: -1 });
