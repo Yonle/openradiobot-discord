@@ -392,7 +392,7 @@ bot.on("messageCreate", async message => {
 			if (!message.channel.guild) return message.reply("This command only works on Server/Guild.");
 			if (!radio || !bot.voiceConnections.has(message.guildID)) return message.reply("I'm not in a voice channel or radio is not created.");
 			if (bot.voiceConnections.get(message.guildID).channelID !== message.member.voiceState.channelID) return message.reply("You're in different voice channel. Because of that, I'm aborting my action now.");
-			await bot.leaveVoiceChannel(bot.voiceConnections.get(message.guild.id).channelID);
+			await bot.leaveVoiceChannel(bot.voiceConnections.get(message.guildID).channelID);
 			radio.metadata.listener.get(message.guildID).destroy();
 			radio.metadata.listener.delete(message.guildID);
 			break;
