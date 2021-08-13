@@ -361,6 +361,24 @@ bot.on("messageCreate", async message => {
 				message.reply(`✔️Loop Type has been set as \`${loopType.toLowerCase()}\``);
 			})();
 			break;
+		case "join":
+			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
+			if (!message.member.voiceState.channelID) return message.reply("You can only use this command after joining some voice channel.");
+			if (bot.voiceConnections.has(message.guildID)) return message.reply("I'm already in a voice channel.");
+			bot.sendChannelTyping(message.channel.id);
+			bot.joinVoiceChannel(message.member.voiceState.channelID).catch(console.error).then(c => {
+				try {
+					c.piper.converterCommand = require("ffmpeg-static");
+				} catch {}
+				c.on('error', console.error);
+				message.reply("Connected to Voice channel.");
+				if (c.playing) return;
+				if (radio.metadata.listener.has(message.guildID)) return c.play(radio.metadata.listener.get(message.guildID), { voiceDataTimeout: -1 });
+				let ply = new PassThrough();
+				radio.metadata.listener.set(message.guildID, ply);
+				c.play(ply, { voiceDataTimeout: -1 });
+			});
+			break;
 		case "leave":
 			if (!radio || !bot.voiceConnections.has(message.guildID) || !radio.metadata.listener.has(message.guildID)) return message.reply("I'm not in a voice channel or radio is not created.");
 			if (bot.voiceConnections.get(message.guildID).channelID !== message.member.voiceState.channelID) return message.reply("You're in different voice channel. Because of that, I'm aborting my action now.");
@@ -385,7 +403,9 @@ bot.on("messageCreate", async message => {
 				text += "\n\*queue    - See & Manage queue list.";
 				text += "\n\*autoplay - Auto play next song from youtube **Related Videos** query.";
 				text += "\n\*loop     - Loop queue";
-				text += "\n\*leave    - Leae voice channel";
+				text += "\n\n**__Voice Channel__**";
+				text += "\n\*join     - Join Voice channel and play radio.";
+				text += "\n\*leave    - Leave voice channel";
 				
 				message.reply(text);
 			})();
