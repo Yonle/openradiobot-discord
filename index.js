@@ -346,7 +346,7 @@ bot.on("messageCreate", async message => {
 		case "autoplay":
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
 			let autoplay = radio.metadata.autoplay;
-			if (radio.curSong.type == 'raw') return message.reply('Sorry. You can\'t use autoplay right now.');
+			if (radio.metadata.curSong.type == 'raw') return message.reply('Sorry. You can\'t use autoplay right now.');
 			if (!autoplay) {
 				radio.metadata.autoplay = true;
 				let info = radio.metadata.curSong;
