@@ -155,6 +155,7 @@ bot.on("messageCreate", async message => {
 		case "destroy": 
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
 			radio.player.destroy();
+			if (bot.voiceConnections.has(message.guildID)) bot.leaveVoiceChannel(bot.voiceConnections.get(message.guildID).channelID);
 			radios.delete(message.guildID);
 			message.reply("✔️Radio destroyed.");
 			break;
