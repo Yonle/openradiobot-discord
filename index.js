@@ -150,14 +150,14 @@ bot.on("messageCreate", async message => {
 					if (err) radios.get(message.guildID).metadata.listener.delete(id);
 				}));
 			});
-			message.reply("✔️Radio Created");
+			message.reply("✅Radio Created");
 			break;
 		case "destroy": 
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
 			radio.player.destroy();
 			if (bot.voiceConnections.has(message.guildID)) bot.leaveVoiceChannel(bot.voiceConnections.get(message.guildID).channelID);
 			radios.delete(message.guildID);
-			message.reply("✔️Radio destroyed.");
+			message.reply("✅Radio destroyed.");
 			break;
 		case "manage": 
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
@@ -213,7 +213,7 @@ bot.on("messageCreate", async message => {
 				delete radio.queue[Number(args)-1];
 				// Re-create. Ignore the undefined ones
 				radio.queue = radio.queue.filter(song => song);
-				message.reply(`✔️Song number ${args} has been removed.`);
+				message.reply(`✅Song number ${args} has been removed.`);
 			} else if (method === "move") {
 				let args = message.content.split(" ").slice(2)[0];
 				let to = message.content.split(" ").slice(3)[0];
@@ -223,10 +223,10 @@ bot.on("messageCreate", async message => {
 				let toOrder = radio.queue[Number(to)-1];
 				radio.queue[Number(args)-1] = toOrder;
 				radio.queue[Number(to)-1] = fromOrder;
-				message.reply(`✔️*${fromOrder.title}* order moved to *${toOrder.title}* order.`);
+				message.reply(`✅*${fromOrder.title}* order moved to *${toOrder.title}* order.`);
 			} else if (method === "shuffle" || method === "random") {
 				radio.queue.sort(() => 0.5 - Math.random());
-				message.reply("✔️Queue order has been sorted randomly.");
+				message.reply("✅Queue order has been sorted randomly.");
 			}
 			break;
 		case "play":
@@ -255,7 +255,7 @@ bot.on("messageCreate", async message => {
 				ytpl(str, { limit: Infinity, page: Infinity }).then(res => {
 					if (!res.items.length) return message.reply("🙅No Result.");
 					if (!radio) return;
-					message.reply(`✔️${res.items.length} Song has been added to queue`);
+					message.reply(`✅${res.items.length} Song has been added to queue`);
 					if (!radio.queue.length && !radio.metadata.curSong) {
 						radio.queue.push(res.items);
 						radio.queue = radio.queue.flat(Infinity);
@@ -281,7 +281,7 @@ bot.on("messageCreate", async message => {
 				} else {
 					radio.queue.push(newQueue);
 					bot.sendChannelTyping(message.channel.id);
-					message.reply("✔️A stream URL has been added to queue.");
+					message.reply("✅A stream URL has been added to queue.");
 				}
 			} else if (ytdl.validateURL(str)) {
 				ytdl.getInfo(str).then(info => {
@@ -294,7 +294,7 @@ bot.on("messageCreate", async message => {
 						radio.play();
 					} else {
 						radio.queue.push(info);
-						message.reply(`✔️**__${info.videoDetails.title}__** has been added to queue.`);
+						message.reply(`✅**__${info.videoDetails.title}__** has been added to queue.`);
 					}
 				});
 			} else {
@@ -310,7 +310,7 @@ bot.on("messageCreate", async message => {
 						radio.play();
 					} else {
 						radio.queue.push(res.items[0]);
-						message.reply(`✔️**__${res.items[0].title}__** has been added to queue.`);
+						message.reply(`✅**__${res.items[0].title}__** has been added to queue.`);
 					}
 				}).catch(err => {
 					message.reply(`An error occured: ${err.toString()}`);
@@ -351,10 +351,10 @@ bot.on("messageCreate", async message => {
 				radio.metadata.autoplay = true;
 				let info = radio.metadata.curSong;
 				radio.queue.push(info.related_videos[0]);
-				message.reply("✔️Autoplay enabled");
+				message.reply("✅Autoplay enabled");
 			} else {
 				radio.metadata.autoplay = false;
-				message.reply("✔️Autoplay disabled");
+				message.reply("✅Autoplay disabled");
 			}
 			break;
 		case "loop":
@@ -365,7 +365,7 @@ bot.on("messageCreate", async message => {
 				if (!loopType || !availableLoopType.includes(loopType)) return message.reply("Usage: `/loop [queue|single|none]`");
 			
 				radio.metadata.loopType = loopType.toLowerCase();
-				message.reply(`✔️Loop Type has been set as \`${loopType.toLowerCase()}\``);
+				message.reply(`✅Loop Type has been set as \`${loopType.toLowerCase()}\``);
 			})();
 			break;
 		case "join":
