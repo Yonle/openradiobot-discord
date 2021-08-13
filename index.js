@@ -231,7 +231,7 @@ bot.on("messageCreate", async message => {
 			if (str) message.reply(`Searching \`${str}\`...`);
 			bot.sendChannelTyping(message.channel.id);
 
-			if (message.member.voiceState.channelID) {
+			if (message.member.voiceState.channelID && !bot.voiceChannels.has(message.guildID)) {
 				bot.joinVoiceChannel(message.member.voiceState.channelID).catch(console.error).then(c => {
 					try {
 						c.piper.converterCommand = require("ffmpeg-static");
