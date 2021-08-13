@@ -237,7 +237,7 @@ bot.on("messageCreate", async message => {
 			if (str) message.reply(`Searching \`${str}\`...`);
 			bot.sendChannelTyping(message.channel.id);
 
-			if (message.member.voiceState.channelID && !bot.voiceConnections.has(message.guildID)) {
+			if (message.channel.guild && message.member.voiceState.channelID && !bot.voiceConnections.has(message.guildID)) {
 				bot.joinVoiceChannel(message.member.voiceState.channelID).catch(console.error).then(c => {
 					try {
 						c.piper.converterCommand = require("ffmpeg-static");
@@ -369,6 +369,7 @@ bot.on("messageCreate", async message => {
 			})();
 			break;
 		case "join":
+			if (!message.channel.guild) return message.reply("This command only works on Server/Guild.");
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean \*new ?");
 			if (!message.member.voiceState.channelID) return message.reply("You can only use this command after joining some voice channel.");
 			if (bot.voiceConnections.has(message.guildID)) return message.reply("I'm already in a voice channel.");
@@ -388,6 +389,7 @@ bot.on("messageCreate", async message => {
 			});
 			break;
 		case "leave":
+			if (!message.channel.guild) return message.reply("This command only works on Server/Guild.");
 			if (!radio || !bot.voiceConnections.has(message.guildID)) return message.reply("I'm not in a voice channel or radio is not created.");
 			if (bot.voiceConnections.get(message.guildID).channelID !== message.member.voiceState.channelID) return message.reply("You're in different voice channel. Because of that, I'm aborting my action now.");
 			await bot.leaveVoiceChannel(bot.voiceConnections.get(message.guild.id).channelID);
