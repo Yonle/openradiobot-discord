@@ -145,7 +145,7 @@ bot.on("messageCreate", async message => {
 				}
 			});
 			radios.get(message.guildID).player.on('data', data => {
-				if (!radios.get(id).metadata.header) radios.get(id).metadata.header = data;
+				if (!radios.get(message.guildID).metadata.header) radios.get(message.guildID).metadata.header = data;
 				radios.get(message.guildID).metadata.listener.forEach((res, id) => res.write(data, err => {
 					if (err) radios.get(message.guildID).metadata.listener.delete(id);
 				}));
@@ -245,7 +245,7 @@ bot.on("messageCreate", async message => {
 					if (c.playing) return;
 					if (radio.metadata.listener.has(message.guildID)) return c.play(radio.metadata.listener.get(message.guildID), { voiceDataTimeout: -1 });
 					let ply = new PassThrough();
-					if (radios.get(id).metadata.header) ply.write(radios.get(id).metadata.header);
+					if (radios.get(message.guildID).metadata.header) ply.write(radios.get(message.guildID).metadata.header);
 					radio.metadata.listener.set(message.guildID, ply);
 					c.play(ply, { voiceDataTimeout: -1 });
 				});
@@ -381,7 +381,7 @@ bot.on("messageCreate", async message => {
 				if (c.playing) return;
 				if (radio.metadata.listener.has(message.guildID)) return c.play(radio.metadata.listener.get(message.guildID), { voiceDataTimeout: -1 });
 				let ply = new PassThrough();
-				if (radios.get(id).metadata.header) ply.write(radios.get(id).metadata.header);
+				if (radios.get(message.guildID).metadata.header) ply.write(radios.get(message.guildID).metadata.header);
 				radio.metadata.listener.set(message.guildID, ply);
 				c.play(ply, { voiceDataTimeout: -1 });
 			});
