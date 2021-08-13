@@ -25,6 +25,7 @@ server.on('request', (req, res) => {
 	} else {
 		let ply = Math.random();
 		res.setHeader("content-type", "audio/mp3");
+		if (radios.get(id).metadata.header) res.write(radios.get(id).metadata.header);
 		radios.get(id).metadata.listener.set(ply, res);
 		radios.get(id).metadata.totalListener++;
 
@@ -93,11 +94,12 @@ bot.on("messageCreate", async message => {
 					starttime: Date.now(),
 					curSong: null,
 					autoplay: false,
-					loopType: "none"
+					loopType: "none",
+					header: null
 				},
 				play: function () {
 					if (!radio) radio = radios.get(message.guildID);
-					if (!radio) return console.log("There's no radio. Aborting...");
+					if (!radio) return;
 					radio.queue = radio.queue.filter(song => song);
 					if (radio.metadata.loopType == "queue" && typeof(radio.metadata.curSong) === "object") radio.queue.push(radio.metadata.curSong);
 					if (radio.metadata.loopType == "single" && typeof(radio.metadata.curSong) === "object") radio.queue.unshift(radio.metadata.curSong);
@@ -142,9 +144,12 @@ bot.on("messageCreate", async message => {
 					return true;
 				}
 			});
-			radios.get(message.guildID).player.on('data', data => radios.get(message.guildID).metadata.listener.forEach((res, id) => res.write(data, err => {
-				if (err) radios.get(message.guildID).metadata.listener.delete(id);
-			})));
+			radios.get(message.guildID).player.on('data', data => {
+				if (!radios.get(id).metadata.header) radios.get(id).metadata.header = data;
+				radios.get(message.guildID).metadata.listener.forEach((res, id) => res.write(data, err => {
+					if (err) radios.get(message.guildID).metadata.listener.delete(id);
+				}));
+			});
 			message.reply("✔️Radio Created");
 			break;
 		case "destroy": 
@@ -240,6 +245,7 @@ bot.on("messageCreate", async message => {
 					if (c.playing) return;
 					if (radio.metadata.listener.has(message.guildID)) return c.play(radio.metadata.listener.get(message.guildID), { voiceDataTimeout: -1 });
 					let ply = new PassThrough();
+					if (radios.get(id).metadata.header) ply.write(radios.get(id).metadata.header);
 					radio.metadata.listener.set(message.guildID, ply);
 					c.play(ply, { voiceDataTimeout: -1 });
 				});
@@ -375,6 +381,7 @@ bot.on("messageCreate", async message => {
 				if (c.playing) return;
 				if (radio.metadata.listener.has(message.guildID)) return c.play(radio.metadata.listener.get(message.guildID), { voiceDataTimeout: -1 });
 				let ply = new PassThrough();
+				if (radios.get(id).metadata.header) ply.write(radios.get(id).metadata.header);
 				radio.metadata.listener.set(message.guildID, ply);
 				c.play(ply, { voiceDataTimeout: -1 });
 			});
