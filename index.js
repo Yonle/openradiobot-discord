@@ -9,7 +9,7 @@ const ms = require("ms");
 const { PassThrough } = require("stream");
 require("dotenv").config();
 
-const bot = new eris(process.env.BOT_TOKEN);
+const bot = new eris(process.env.BOT_TOKEN, { intends: ["guildVoiceStates"] });
 const server = new Server();
 const radios = new Map();
 
